@@ -1,8 +1,11 @@
 # Pomodoro Peak
 
+
+
 ## Overview
 
 Pomodoro Peak is a productivity application that helps you manage your work and break sessions efficiently using the Pomodoro Technique.
+
 
 
 ## Features
@@ -13,11 +16,13 @@ Pomodoro Peak is a productivity application that helps you manage your work and 
 - Customize timer durations according to your preference.
 
 
+
 ## Technologies Used
 
 - React.js for the front-end interface.
 - Tailwind CSS for styling.
 - React Icons for icon components.
+
 
 
 ## Usage
@@ -34,11 +39,12 @@ Pomodoro Peak is a productivity application that helps you manage your work and 
   ```
 
 3. Start the development server:
-   ```bash
-   npm start
-   ```
+```bash
+    npm start
+```
 
 4. Open your browser and navigate to `http://localhost:3000` to view the application.
+
 
 
 ## Configuration
