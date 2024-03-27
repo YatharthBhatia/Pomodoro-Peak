@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-:root {
-  --pomodoro-color: #ff6347; /* Pomodoro background color */
-  --short-break-color: #6cb2eb; /* Short break background color */
-  --long-break-color: #98fb98;
-}
-
-body {
-  background-color: var(--pomodoro-color);
-  background-color: var(--short-break-color);
-  background-color: var(--long-break-color);  /* Initial background color */
-}
 .App {
   text-align: center;
 }

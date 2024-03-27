@@ -1,17 +1,23 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import ModalSettings from "./components/modalSettings";
 import Navigation from "./components/navigation";
 import Timer from "./components/timer";
 import './App.css';
 import './index.css';
+import bellSound from './components/bell.mp3';
+
 
 
 export default function Home() {
 	const [POMODORO, SHORTBREAK, LONGBREAK] = [25, 5, 10];
+	const cycleRef = useRef([0, 1, 0, 1, 0, 1, 0, 2]);
+const [cycleIndex, setCycleIndex] = useState(0);
 
 	const [openSetting, setOpenSetting] = useState(false);
 	const [ticking, setTicking] = useState(false);
 	const [isTimeUp, setIsTimeUp] = useState(false);
+	const [sessionsDone, setSessionsDone] = useState(0);
+
 
 	const [poromodo, setPomodo] = useState(POMODORO);
 	const [shortBreak, setShortBreak] = useState(SHORTBREAK);
@@ -19,25 +25,33 @@ export default function Home() {
 	const [seconds, setSeconds] = useState(0);
 	const [stage, setStage] = useState(0);
 	const [consumedSecond, setConsumedSecond] = useState(0);
+	const [audio] = useState(new Audio(bellSound));
+
 
 	const pomodoroRef = useRef();
 	const shortBreakRef = useRef();
 	const longBreakRef = useRef();
 
+	const playSound = () => {
+		audio.currentTime = 0;
+		audio.play();
+	};
+	
 	const updateTimeDefaultValue = () => {
 		setPomodo(pomodoroRef.current.value);
 		setShortBreak(shortBreakRef.current.value);
 		setLongBreak(longBreakRef.current.value);
 	};
 
-	const getTickingTime = () => {
+	const getTickingTime = useCallback(() => {
 		const timeStage = {
 			0: poromodo,
 			1: shortBreak,
 			2: longBreak,
 		};
 		return timeStage[stage];
-	};
+	}, [poromodo, shortBreak, longBreak, stage]);
+	
 
 	const updateMinute = () => {
 		const updateStage = {
@@ -81,6 +95,13 @@ export default function Home() {
 		const setMinutes = updateMinute();
 		if (minutes === 0 && seconds === 0) {
 			timeUp();
+			const nextIndex = (cycleIndex + 1) % cycleRef.current.length;
+			setCycleIndex(nextIndex);
+			switchStage(cycleRef.current[nextIndex]);
+			
+			if (stage === 0) {
+				setSessionsDone((prevSessionsDone) => prevSessionsDone + 1);
+			}  playSound();
 		} else if (seconds === 0) {
 			setMinutes((minute) => minute - 1);
 			setSeconds(59);
@@ -88,30 +109,52 @@ export default function Home() {
 			setSeconds((second) => second - 1);
 		}
 	};
+	
+
 	const startTimer = () => {
 		setIsTimeUp(false);
 		setTicking((ticking) => !ticking);
 	};
 
+
+	const updateFavicon = (stage) => {
+		const faviconUrl = `${stage}.png`;
+		const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+		link.type = 'image/png';
+		link.rel = 'icon';
+		link.href = faviconUrl;
+		document.head.appendChild(link);
+	};
+	  
+
+	useEffect(() => {
+        updateFavicon(stage);
+    }, [stage]);
+	
+	useEffect(() => {
+        document.body.style.backgroundColor = stage === 1 ? "#B2DFDB" : stage === 2 ? '#BBDEFB' : '#E1BEE7';
+    }, [stage]);
+
 	useEffect(() => {
 		window.onbeforeunload = () => {
 			return consumedSecond ? "Show warning" : null;
 		};
-
+	
 		const timer = setInterval(() => {
 			if (ticking) {
 				setConsumedSecond((value) => value + 1);
 				clockTicking();
 			}
-		}, 1);
+		}, 1000);
 		if (isTimeUp) {
 			clearInterval(timer);
 		}
 		return () => {
 			clearInterval(timer);
 		};
-	}, [poromodo, shortBreak, longBreak, ticking, seconds]);
-
+	}, [clockTicking, consumedSecond, isTimeUp, ticking]);
+	
+	
 	useEffect(() => {
 		const STATE_FLOW = ['Pomodoro', 'Short Break', 'Long Break'];
 		const formattedMinutes = String(getTickingTime()).padStart(2, '0');
@@ -119,41 +162,37 @@ export default function Home() {
 		document.title = `${STATE_FLOW[stage]} - ${formattedMinutes}:${formattedSeconds}`;
 	}, [stage, seconds, getTickingTime]);
 
-	useEffect(() => {
-		console.log('Stage:', stage);
-		document.body.style.backgroundColor = `var(--${stage === 0 ? 'pomodoro' : stage === 1 ? 'short-break' : 'long-break'})`;
-	  }, [stage]);
-	  
-	  
-	
-
 	return (
 		<>
-			<div className="min-h-screen  bg-red-100 font-inter">
-				<div className="max-w-2xl mx-auto min-h-screen flex flex-col">
-					<Navigation setOpenSetting={setOpenSetting} />
-					<div className="mt-10">
-						<Timer
-							switchStage={switchStage}
-							getTickingTime={getTickingTime}
-							stage={stage}
-							ticking={ticking}
-							startTimer={startTimer}
-							seconds={seconds}
-							isTimeUp={isTimeUp}
-							reset={reset}
-						/>
+		<div className=" mt-5 font-inter flex flex-col justify-center">
+			<div className="max-w-2xl mx-auto flex items-center justify-between w-full px-14">
+				<div className="text-black font-bold font-mono text-center pt-3">
+						Sessions Completed: {sessionsDone}
 					</div>
-				</div>
-				<ModalSettings
-					openSetting={openSetting}
-					setOpenSetting={setOpenSetting}
-					pomodoroRef={pomodoroRef}
-					shortBreakRef={shortBreakRef}
-					longBreakRef={longBreakRef}
-					updateTimeDefaultValue={updateTimeDefaultValue}
+				<Navigation setOpenSetting={setOpenSetting} />
+			</div>
+			<div className="md-7 mt-2 flex gap-4 p-1">
+				<Timer 
+					switchStage={switchStage}
+					getTickingTime={getTickingTime}
+					stage={stage}
+					ticking={ticking}
+					startTimer={startTimer}
+					seconds={seconds}
+					isTimeUp={isTimeUp}
+					reset={reset}
 				/>
 			</div>
+			<ModalSettings
+				openSetting={openSetting}
+				setOpenSetting={setOpenSetting}
+				pomodoroRef={pomodoroRef}
+				shortBreakRef={shortBreakRef}
+				longBreakRef={longBreakRef}
+				updateTimeDefaultValue={updateTimeDefaultValue}
+			/>
+		</div>
+
 		</>
 	);
 }
