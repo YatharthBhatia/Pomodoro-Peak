@@ -4,7 +4,6 @@ import Navigation from "./components/navigation";
 import Timer from "./components/timer";
 import './App.css';
 import './index.css';
-import './output.css';
 
 
 export default function Home() {
@@ -104,7 +103,7 @@ export default function Home() {
 				setConsumedSecond((value) => value + 1);
 				clockTicking();
 			}
-		}, 1000);
+		}, 1);
 		if (isTimeUp) {
 			clearInterval(timer);
 		}
