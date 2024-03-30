@@ -1,4 +1,4 @@
-# 🍅 Pomodoro Peak 🏔️
+# 🍅 Pomodoro Peak
 
 
 ## Overview
