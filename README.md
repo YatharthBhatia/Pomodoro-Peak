@@ -1,28 +1,24 @@
-# Pomodoro Peak
-
+# 🍅 Pomodoro Peak 🏔️
 
 
 ## Overview
 
-Pomodoro Peak is a productivity application that helps you manage your work and break sessions efficiently using the Pomodoro Technique.
-
+Pomodoro Peak is a productivity application that helps you manage your work and break sessions efficiently using the Pomodoro Technique. ⏳
 
 
 ## Features
 
-- Set custom timers for Pomodoro, Short Break, and Long Break sessions.
-- Visual and audio cues for session changes.
-- Keep track of completed sessions.
-- Customize timer durations according to your preference.
-
+- Set custom timers for Pomodoro, Short Break, and Long Break sessions. ⏰
+- Visual and audio cues for session changes. 🔊
+- Keep track of completed sessions. 📈
+- Customize timer durations according to your preference. 🛠️
 
 
 ## Technologies Used
 
-- React.js for the front-end interface.
-- Tailwind CSS for styling.
-- React Icons for icon components.
-
+- React.js for the front-end interface. ⚛️
+- Tailwind CSS for styling. 🎨
+- React Icons for icon components. ✨
 
 
 ## Usage
@@ -43,13 +39,21 @@ Pomodoro Peak is a productivity application that helps you manage your work and 
 npm start
 ```
 
-4. Open your browser and navigate to `http://localhost:3000` to view the application.
+4. Open your browser and navigate to `http://localhost:3000` to view the application. 🌐
 
 
 
 ## Configuration
 
-You can customize the timer durations and other settings in the Settings modal within the application.
+You can customize the timer durations and other settings in the Settings modal within the application. ⚙️
+
+
+
+
+
+
+https://github.com/YatharthBhatia/Pomodoro-Peak/assets/124282341/dd29f4d5-a013-49ac-b994-601edf91e4b1
+
 
 
 
